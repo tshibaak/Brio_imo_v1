@@ -9,6 +9,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PropertyController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\TenantController;
+use App\Http\Controllers\TenantNotificationController;
 use App\Http\Controllers\TicketController;
 use App\Models\Invoice;
 use Illuminate\Http\Request;
@@ -45,6 +46,8 @@ Route::middleware(['auth', 'active', 'role:landlord'])->group(function (): void 
 });
 
 Route::middleware(['auth', 'active', 'role:tenant'])->group(function (): void {
+    Route::post('tenant/notifications/{notification}/read', [TenantNotificationController::class, 'read'])
+        ->name('tenant.notifications.read');
     Route::get('tenant/invoices', function (Request $request) {
         $invoices = Invoice::query()
             ->whereHas('contract', fn ($query) => $query->where('tenant_id', $request->user()->id))

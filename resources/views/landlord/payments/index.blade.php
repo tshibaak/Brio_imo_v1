@@ -14,7 +14,7 @@
                 @if ($payment->status === 'pending')
                     <div class="mt-5 grid gap-3 border-t border-slate-100 pt-4 sm:grid-cols-[auto_1fr]">
                         <form method="POST" action="{{ route('payments.approve', $payment) }}">@csrf<button class="action-button">Valider le paiement</button></form>
-                        <form class="flex flex-wrap gap-2" method="POST" action="{{ route('payments.reject', $payment) }}">@csrf<label class="sr-only" for="reason-{{ $payment->id }}">Motif du rejet</label><input id="reason-{{ $payment->id }}" class="field-input min-w-56 flex-1" name="rejection_reason" required placeholder="Motif du rejet"><button class="small-button text-rose-700">Rejeter</button></form>
+                        <form class="flex flex-col gap-2 sm:flex-row" method="POST" action="{{ route('payments.reject', $payment) }}">@csrf<label class="sr-only" for="reason-{{ $payment->id }}">Motif du rejet</label><input id="reason-{{ $payment->id }}" class="field-input min-w-0 flex-1" name="rejection_reason" required placeholder="Motif du rejet"><button class="small-button text-rose-700">Rejeter</button></form>
                     </div>
                 @elseif ($payment->status === 'rejected')
                     <p class="mt-3 text-sm text-rose-700">Motif : {{ $payment->rejection_reason }}</p>

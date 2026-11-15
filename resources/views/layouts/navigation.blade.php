@@ -1,7 +1,7 @@
 <nav x-data="{ open: false }" class="border-b border-neutral-800 bg-neutral-950">
     <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
         <div class="flex items-center gap-8">
-            <a href="{{ route('dashboard') }}" class="text-xl font-black tracking-tight text-white">BRIO<span class="text-orange-500">.</span></a>
+            <a href="{{ route('dashboard') }}" class="text-xl font-black tracking-tight text-white">BRIO-IMMO</a>
             <div class="hidden items-center gap-1 md:flex">
                 <a class="nav-link" @if (request()->routeIs('dashboard')) aria-current="page" @endif href="{{ route('dashboard') }}">Tableau de bord</a>
                 @if (Auth::user()->isLandlord())
@@ -26,7 +26,7 @@
                 <button class="rounded-lg px-3 py-2 text-sm font-semibold text-stone-300 hover:bg-white/10 hover:text-white">Déconnexion</button>
             </form>
         </div>
-        <button class="rounded-lg p-2 text-stone-200 hover:bg-white/10 md:hidden" @click="open = !open" :aria-expanded="open.toString()" aria-controls="mobile-navigation" aria-label="Ouvrir le menu">☰</button>
+        <button class="rounded-lg p-2 text-stone-200 hover:bg-white/10 md:hidden" @click="open = !open" :aria-expanded="open.toString()" aria-controls="mobile-navigation" :aria-label="open ? 'Fermer le menu' : 'Ouvrir le menu'">☰</button>
     </div>
     <div id="mobile-navigation" x-show="open" x-transition class="space-y-1 border-t border-neutral-800 px-4 py-3 md:hidden">
         <a class="nav-link block" href="{{ route('dashboard') }}">Tableau de bord</a>

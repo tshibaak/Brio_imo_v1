@@ -8,6 +8,28 @@
             <div class="stat-card"><p class="text-sm text-slate-500">Notifications non lues</p><p class="mt-2 text-3xl font-bold">{{ $unreadNotifications }}</p><p class="mt-1 text-xs text-slate-500">Paiements et interventions</p></div>
         </div>
         <section class="panel">
+            <h2 class="section-title">Mes notifications</h2>
+            <div class="mt-4 divide-y divide-slate-100">
+                @forelse ($notifications as $notification)
+                    <div class="flex flex-col gap-3 py-4 sm:flex-row sm:items-center sm:justify-between">
+                        <div class="min-w-0">
+                            <p class="break-words text-sm {{ $notification->read_at ? 'text-slate-500' : 'font-semibold text-slate-900' }}">{{ $notification->data['message'] ?? 'Nouvelle notification' }}</p>
+                            <p class="mt-1 text-xs text-slate-500">{{ $notification->created_at->format('d/m/Y H:i') }} · {{ $notification->read_at ? 'Lue' : 'Non lue' }}</p>
+                        </div>
+                        @unless ($notification->read_at)
+                            <form method="POST" action="{{ route('tenant.notifications.read', $notification) }}">
+                                @csrf
+                                <button class="small-button w-full sm:w-auto">Marquer comme lue</button>
+                            </form>
+                        @endunless
+                    </div>
+                @empty
+                    <p class="empty-state mt-4">Aucune notification pour le moment.</p>
+                @endforelse
+            </div>
+            {{ $notifications->links() }}
+        </section>
+        <section class="panel">
             <div class="mb-5 flex items-center justify-between"><h2 class="section-title">Mes biens et contrats</h2><a class="text-sm font-semibold text-teal-700" href="{{ route('tenant.invoices.index') }}">Voir mes factures →</a></div>
             <div class="grid gap-4 md:grid-cols-2">
                 @forelse ($contracts as $contract)

@@ -7,6 +7,7 @@ use App\Models\Invoice;
 use App\Models\MaintenanceTicket;
 use App\Models\Property;
 use App\Models\User;
+use App\Notifications\TicketUpdatedNotification;
 use App\Services\InvoiceGenerationService;
 use App\Services\PaymentReviewService;
 use Carbon\CarbonImmutable;
@@ -32,6 +33,74 @@ class BrioWorkflowsTest extends TestCase
         $response = $this->actingAs($tenant)->get(route('tenant.invoices.index'));
 
         $response->assertOk()->assertSee($ownInvoice->number)->assertDontSee($otherInvoice->number);
+    }
+
+    public function test_tenant_can_mark_their_notification_as_read_and_dashboard_count_decreases(): void
+    {
+        $landlord = User::factory()->create(['role' => 'landlord']);
+        $tenant = User::factory()->create(['role' => 'tenant']);
+        $otherTenant = User::factory()->create(['role' => 'tenant']);
+        $contract = $this->createContract($landlord, $tenant);
+        $ticket = MaintenanceTicket::query()->create([
+            'landlord_id' => $landlord->id,
+            'tenant_id' => $tenant->id,
+            'contract_id' => $contract->id,
+            'property_id' => $contract->property_id,
+            'category' => 'plumbing',
+            'title' => 'Fuite',
+            'description' => 'Fuite sous évier',
+            'status' => 'open',
+        ]);
+        $tenant->notify(new TicketUpdatedNotification($ticket, 'Le statut de votre demande a été modifié.'));
+        $otherTenant->notify(new TicketUpdatedNotification($ticket, 'Notification privée.'));
+        $notification = $tenant->notifications()->firstOrFail();
+        $otherNotification = $otherTenant->notifications()->firstOrFail();
+
+        $this->actingAs($tenant)
+            ->get(route('dashboard'))
+            ->assertViewHas('unreadNotifications', 1)
+            ->assertSee('Le statut de votre demande a été modifié.');
+
+        $this->from(route('dashboard'))
+            ->post(route('tenant.notifications.read', $otherNotification->id))
+            ->assertNotFound();
+
+        $this->from(route('dashboard'))
+            ->post(route('tenant.notifications.read', $notification->id))
+            ->assertRedirect(route('dashboard'));
+
+        $this->assertNotNull($notification->fresh()->read_at);
+        $this->assertNull($otherNotification->fresh()->read_at);
+        $this->get(route('dashboard'))->assertViewHas('unreadNotifications', 0);
+    }
+
+    public function test_invoice_reference_is_shown_automatically_when_declaring_a_payment(): void
+    {
+        Notification::fake();
+        $landlord = User::factory()->create(['role' => 'landlord']);
+        $tenant = User::factory()->create(['role' => 'tenant']);
+        $contract = $this->createContract($landlord, $tenant);
+        $invoice = $this->createInvoice($contract, 'AUTO-INV');
+
+        $this->actingAs($tenant)
+            ->get(route('tenant.invoices.index'))
+            ->assertOk()
+            ->assertSee('Référence de facture')
+            ->assertSee('value="AUTO-INV" readonly', false);
+
+        $this->post(route('tenant.payments.store', $invoice), [
+            'amount' => '75.00',
+            'method' => 'mobile_money',
+        ])
+            ->assertRedirect(route('tenant.invoices.index'))
+            ->assertSessionHas('success');
+
+        $this->assertDatabaseHas('payments', [
+            'invoice_id' => $invoice->id,
+            'declared_by' => $tenant->id,
+            'amount' => '75.00',
+            'transaction_reference' => null,
+        ]);
     }
 
     public function test_landlord_cannot_manage_another_landlords_payment(): void

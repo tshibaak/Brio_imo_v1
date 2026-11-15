@@ -33,6 +33,7 @@ class DashboardController extends Controller
                 'invoices' => $invoices,
                 'balanceByCurrency' => $invoices->groupBy('currency')->map(fn ($rows) => Money::decimal(Money::sum($rows->map(fn ($invoice) => $invoice->balance())))),
                 'unreadNotifications' => $user->unreadNotifications()->count(),
+                'notifications' => $user->notifications()->latest()->paginate(10),
             ]);
         }
 

@@ -2,7 +2,7 @@
     <x-slot name="header"><h1 class="text-2xl font-bold">Créer un compte locataire</h1></x-slot>
     <div class="mx-auto max-w-3xl px-4 py-8 sm:px-6 lg:px-8">@include('shared.flash')
         <form class="panel space-y-5" method="POST" action="{{ route('tenants.store') }}">@csrf
-            <p class="text-sm text-slate-600">Si l’adresse appartient déjà à un locataire BRIO, le compte existant sera associé sans en créer un second.</p>
+            <p class="text-sm text-slate-600">Si l’adresse appartient déjà à un locataire BRIO-IMMO, le compte existant sera associé sans en créer un second.</p>
             <div class="grid gap-5 sm:grid-cols-2">
                 <label class="field-label">Nom complet<input class="field-input" name="name" required value="{{ old('name') }}"></label>
                 <label class="field-label">E-mail<input class="field-input" type="email" name="email" required value="{{ old('email') }}"></label>

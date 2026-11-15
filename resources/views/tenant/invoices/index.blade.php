@@ -13,10 +13,11 @@
                     @endforeach
                 </div>
                 @if ((float) $invoice->balance() > 0)
-                    <form class="mt-5 grid gap-3 border-t border-slate-100 pt-4 md:grid-cols-5" method="POST" action="{{ route('tenant.payments.store', $invoice) }}" enctype="multipart/form-data">@csrf
+                    <form class="mt-5 grid gap-3 border-t border-slate-100 pt-4 sm:grid-cols-2 xl:grid-cols-3" method="POST" action="{{ route('tenant.payments.store', $invoice) }}" enctype="multipart/form-data">@csrf
+                        <label class="field-label">Référence de facture<input class="field-input" value="{{ $invoice->number }}" readonly></label>
                         <label class="field-label">Montant<input class="field-input" type="number" step="0.01" min="0.01" max="{{ $invoice->balance() }}" name="amount" required></label>
                         <label class="field-label">Moyen<select class="field-input" name="method"><option value="mobile_money">Mobile Money</option><option value="bank_transfer">Virement</option><option value="cash">Espèces</option><option value="other">Autre</option></select></label>
-                        <label class="field-label">Référence<input class="field-input" name="transaction_reference" maxlength="120"></label>
+                        <label class="field-label">Référence de transaction (facultative)<input class="field-input" name="transaction_reference" maxlength="120"></label>
                         <label class="field-label">Preuve (facultative)<input class="field-input" type="file" name="proof" accept=".pdf,.jpg,.jpeg,.png"></label>
                         <div class="self-end"><button class="action-button w-full">Déclarer le paiement</button></div>
                     </form>

@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header"><h1 class="text-2xl font-bold">Rapports financiers</h1></x-slot>
     <div class="mx-auto max-w-7xl space-y-6 px-4 py-8 sm:px-6 lg:px-8">@include('shared.flash')
-        <form class="panel grid gap-4 sm:grid-cols-4" method="GET" action="{{ route('reports.index') }}">
+        <form class="panel grid gap-4 sm:grid-cols-2 lg:grid-cols-4" method="GET" action="{{ route('reports.index') }}">
             <label class="field-label">Du<input class="field-input" type="date" name="from" value="{{ $filters['from'] ?? '' }}"></label>
             <label class="field-label">Au<input class="field-input" type="date" name="to" value="{{ $filters['to'] ?? '' }}"></label>
             <label class="field-label">Bien<select class="field-input" name="property_id"><option value="">Tous les biens</option>@foreach ($properties as $property)<option value="{{ $property->id }}" @selected(($filters['property_id'] ?? '') == $property->id)>{{ $property->name }}</option>@endforeach</select></label>

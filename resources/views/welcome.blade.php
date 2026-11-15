@@ -8,7 +8,7 @@
 </head>
 <body class="min-h-screen bg-slate-950 text-white">
     <header class="mx-auto flex max-w-7xl items-center justify-between px-6 py-6">
-        <a class="text-2xl font-black tracking-tight" href="/">BRIO<span class="text-teal-400">.</span></a>
+        <a class="text-2xl font-black tracking-tight" href="/">BRIO-IMMO</a>
         <div class="flex gap-3">
             <a class="rounded-xl px-4 py-2 text-sm font-semibold text-slate-200 hover:bg-white/10" href="{{ route('login') }}">Connexion</a>
             <a class="rounded-xl bg-teal-400 px-4 py-2 text-sm font-bold text-slate-950 hover:bg-teal-300" href="{{ route('register') }}">Créer mon espace</a>

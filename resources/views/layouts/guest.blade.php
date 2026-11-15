@@ -18,7 +18,7 @@
         <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-neutral-950">
             <div>
                 <a class="text-2xl font-black tracking-tight text-white" href="/">
-                    BRIO<span class="text-orange-500">.</span>
+                    BRIO-IMMO
                 </a>
             </div>
 

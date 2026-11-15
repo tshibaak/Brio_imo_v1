@@ -1,5 +1,5 @@
 <x-app-layout>
-    <x-slot name="header"><div class="flex items-center justify-between"><h1 class="text-2xl font-bold">Contrats de location</h1><a class="action-button" href="{{ route('contracts.create') }}">Nouveau contrat</a></div></x-slot>
+    <x-slot name="header"><div class="flex flex-wrap items-center justify-between gap-3"><h1 class="text-2xl font-bold">Contrats de location</h1><a class="action-button" href="{{ route('contracts.create') }}">Nouveau contrat</a></div></x-slot>
     <div class="mx-auto max-w-7xl space-y-5 px-4 py-8 sm:px-6 lg:px-8">@include('shared.flash')
         <div class="space-y-4">
             @forelse ($contracts as $contract)
